@@ -82,4 +82,11 @@ def extract_flow(src_folder,dst_folder,step_size=5,bound=15):
     for rgb_vid_folder in img_list_loader(src_folder,is_dir=True):
         dense_flow(rgb_vid_folder, dst_folder,step_size,bound)
 if __name__ =='__main__':
-    extract_flow("D:\\ai2020_prprc\\rgb_vid\\dump","D:\\ai2020_prprc\\flow\\dump",step_size=5)
+    parser = argparse.ArgumentParser()
+    parser.add_argument('src', type=str, help="src folder")
+    parser.add_argument('dst', type=str, help="dst folder")
+
+    parser.add_argument('--step_size',default=5, type=int, help="step size")
+    args =parser.parse_args()
+    extract_flow(args.src, args.dst,step_size=args.step_size)
+    # extract_flow("D:\\ai2020_prprc\\rgb_vid\\dump","D:\\ai2020_prprc\\flow\\dump",step_size=args.step_size)
