@@ -81,4 +81,4 @@ def extract_video(src_folder, dst_folder):
                 video2frame(vid_name,path)
 
 
-extract_video("D:\\ai-hub\\폭행\\","D:/prprc/assault")
+extract_video("D:\\ai-hub\\폭행\\","D:\\ai2020_prprc\\rgb_vid")

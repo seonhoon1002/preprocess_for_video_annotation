@@ -1,56 +1,86 @@
-from denseflow import TVL1FlowExtractor
-import action_caffe
+import os,sys
 import numpy as np
+import cv2
+from PIL import Image
+from multiprocessing import Pool
+import argparse
+import skvideo.io
+import scipy.misc
+from lsh_util import img_list_loader
+import imageio
+
+def ToImg(raw_flow,bound):
+    '''
+    this function scale the input pixels to 0-255 with bi-bound
+
+    :param raw_flow: input raw pixel value (not in 0-255)
+    :param bound: upper and lower bound (-bound, bound)
+    :return: pixel value scale from 0 to 255
+    '''
+    flow=raw_flow
+    flow[flow>bound]=bound
+    flow[flow<-bound]=-bound
+    flow-=-bound
+    flow*=(255/float(2*bound))
+    return flow
+
+def save_flows(flows,rgb_vid_path,save_dir,num,bound):
+    '''
+    To save the optical flow images and raw images
+    :param flows: contains flow_x and flow_y
+    :param image: raw image
+    :param save_dir: save_dir name (always equal to the video id)
+    :param num: the save id, which belongs one of the extracted frames
+    :param bound: set the bi-bound to flow images
+    :return: return 0
+    '''
+    #rescale to 0~255 with the bound setting
+
+    flow_x=ToImg(flows[...,0],bound)
+    flow_y=ToImg(flows[...,1],bound)
+
+    folder_name= rgb_vid_path.split("\\")[-1]
+    save_dir =os.path.join(save_dir,folder_name)
+
+    if not os.path.exists(save_dir):
+        os.makedirs(save_dir)
+    #save the flows
+    save_x=os.path.join(save_dir,'x_{:05d}.jpg'.format(num))
+    save_y=os.path.join(save_dir,'y_{:05d}.jpg'.format(num))
+    flow_x_img=Image.fromarray(flow_x)
+    flow_y_img=Image.fromarray(flow_y)
+    imageio.imwrite(save_x,flow_x_img)
+    imageio.imwrite(save_y,flow_y_img)
+
+def dense_flow(src,dst,step_size,bound):
+    frame_list= img_list_loader(src,extension='jpg')
+    flow_num=0
+    for idx in range(len(frame_list))[:len(frame_list)-step_size-1]:
+        frame=cv2.imread(frame_list[idx])
+        prev_image=frame
+        prev_gray=cv2.cvtColor(prev_image,cv2.COLOR_RGB2GRAY)
+        for t in range(step_size):
+            frame=cv2.imread(frame_list[idx+t+1])
+            image=frame
+            gray=cv2.cvtColor(image,cv2.COLOR_RGB2GRAY)
+            dtvl1 =cv2.optflow.DualTVL1OpticalFlow_create()
+            flowDTVL1=dtvl1.calc(prev_gray,gray,None)
+            save_flows(flowDTVL1,src,dst,flow_num,bound) #this is to save flows and img.
+            flow_num+=1
 
 
-class FlowExtractor(object):
+def get_video_list():
+    video_list=[]
+    for cls_names in os.listdir(videos_root):
+        cls_path=os.path.join(videos_root,cls_names)
+        for video_ in os.listdir(cls_path):
+            video_list.append(video_)
+    video_list.sort()
+    return video_list,len(video_list)
 
-    def __init__(self, dev_id, bound=20):
-        TVL1FlowExtractor.set_device(dev_id)
-        self._et = TVL1FlowExtractor(bound)
-
-    def extract_flow(self, frame_list, new_size=None):
-        """
-        This function extracts the optical flow and interleave x and y channels
-        :param frame_list:
-        :return:
-        """
-        frame_size = frame_list[0].shape[:2]
-        rst = self._et.extract_flow([x.tostring() for x in frame_list], frame_size[1], frame_size[0])
-        n_out = len(rst)
-        if new_size is None:
-            ret = np.zeros((n_out*2, frame_size[0], frame_size[1]))
-            for i in xrange(n_out):
-                ret[2*i, :] = np.fromstring(rst[i][0], dtype='uint8').reshape(frame_size)
-                ret[2*i+1, :] = np.fromstring(rst[i][1], dtype='uint8').reshape(frame_size)
-        else:
-            import cv2
-            ret = np.zeros((n_out*2, new_size[1], new_size[0]))
-            for i in xrange(n_out):
-                ret[2*i, :] = cv2.resize(np.fromstring(rst[i][0], dtype='uint8').reshape(frame_size), new_size)
-                ret[2*i+1, :] = cv2.resize(np.fromstring(rst[i][1], dtype='uint8').reshape(frame_size), new_size)
-
-        return ret
-
-
-if __name__ == "__main__":
-    import cv2
-    im1 = cv2.imread("D:\\prprc\\assault\\11-2_cam01_assault01_place08_night_spring+assault+52+248\\img_00000.jpg")
-    im2 = cv2.imread("D:\\prprc\\assault\\11-2_cam01_assault01_place08_night_spring+assault+52+248\\img_00001.jpg")
-    print(im1.shape)
-    print(im2.shape)
-    exit()
-
-    f = FlowExtractor(0)
-    flow_frames = f.extract_flow([im1, im2])
-    from pylab import *
-
-    plt.figure()
-    plt.imshow(flow_frames[0])
-    plt.figure()
-    plt.imshow(flow_frames[1])
-    plt.figure()
-    plt.imshow(im1)
-    plt.show()
-
-    print(flow_frames)
+def extract_flow(src_folder,dst_folder,step_size=5,bound=15):
+    for rgb_vid_folder in img_list_loader(src_folder,is_dir=True):
+        dense_flow(rgb_vid_folder, dst_folder,step_size,bound)
+        exit(0)
+if __name__ =='__main__':
+    extract_flow("D:\\ai2020_prprc\\rgb_vid\\dump","D:\\ai2020_prprc\\flow\\dump",step_size=5)
