@@ -1,6 +1,7 @@
 import os
 from xml.etree.ElementTree import parse
 import datetime
+import argparse
 import cv2
 def img_list_loader(path, extension = 'pickle',is_dir=False):
     """
@@ -64,7 +65,8 @@ def video2frame(invideofilename, save_path):
             fname = 'img_{}.jpg'.format("{0:05d}".format(img_cnt))
             cv2.imwrite(os.path.join(save_path, fname), image) # save frame as JPEG file
             img_cnt+=1
-            if img_cnt % 100 ==0:
+            if img_cnt % 1000 ==0:
+                print(img_cnt)
         count += 1
     print("{} images are extracted in {}.". format(count, save_path))
 
@@ -81,4 +83,11 @@ def extract_video(src_folder, dst_folder):
                 video2frame(vid_name,path)
 
 
-extract_video("D:\\ai-hub\\폭행\\","D:\\ai2020_prprc\\rgb_vid")
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument('src', type=str, help="src folder")
+    parser.add_argument('dst', type=str, help="src folder")
+
+    args =parser.parse_args()
+    # extract_video("D:\\ai-hub\\싸움\\","D:\\ai2020_prprc\\rgb_vid\\fight")
+    extract_video(args.src, args.dst)

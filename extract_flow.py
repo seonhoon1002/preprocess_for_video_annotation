@@ -81,6 +81,5 @@ def get_video_list():
 def extract_flow(src_folder,dst_folder,step_size=5,bound=15):
     for rgb_vid_folder in img_list_loader(src_folder,is_dir=True):
         dense_flow(rgb_vid_folder, dst_folder,step_size,bound)
-        exit(0)
 if __name__ =='__main__':
     extract_flow("D:\\ai2020_prprc\\rgb_vid\\dump","D:\\ai2020_prprc\\flow\\dump",step_size=5)
