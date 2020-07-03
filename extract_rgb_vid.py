@@ -17,8 +17,8 @@ def img_list_loader(path, extension = 'pickle',is_dir=False):
         result = [os.path.join(path, name) for name in imgs_list if name.split(".")[1] == extension]
     return result
 def m2s(time):
-    min=time.split(":")[1]
-    sec=time.split(":")[2]
+    min=time.split(":")[-2]
+    sec=time.split(":")[-1]
     
     total_sec=float(min) * 60 + float(sec)
     
@@ -78,7 +78,7 @@ def extract_video(src_folder, dst_folder):
                 label=parsing_label(xml_path)
                 dir_name= naming(vid_name.split("\\")[-1],label)
                 path= os.path.join(dst_folder,dir_name)
-                
+                print(path)
                 mkdir(path)
                 video2frame(vid_name,path)
 
