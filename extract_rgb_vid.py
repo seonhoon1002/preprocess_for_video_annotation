@@ -51,22 +51,41 @@ def mkdir(path):
         if e.errno != errno.EEXIST:
             print("Failed to create directory!!!!!")
             raise
+def extract_stp(xml_path):
+    tree = parse(xml_path)
+    root = tree.getroot()
+    event = root.findall('event')
 
-def video2frame(invideofilename, save_path):
+    event_name = [x.findtext("eventname") for x in event]
+    start_time = [x.findtext("starttime") for x in event]
+    duration = [x.findtext("duration") for x in event]
+
+    start_time= m2s(start_time[0])
+    return start_time
+
+def video2frame(invideofilename, save_path,stp):
     vidcap = cv2.VideoCapture(invideofilename)
     count = 0
     img_cnt =0
+
+    target_frame= int(stp) * 30
+    if target_frame < 300:
+        target_frame = 301
+    vidcap.set(1,target_frame- 300)
+    
     while True:
         success,image = vidcap.read()
         if not success:
             break
-        if count %3 ==0:
-            image=cv2.resize(image,dsize=(256,256),interpolation=cv2.INTER_AREA)
+        if count %2 ==0:
+            image=cv2.resize(image,dsize=(1920,1080),interpolation=cv2.INTER_AREA)
             fname = 'img_{}.jpg'.format("{0:05d}".format(img_cnt))
             cv2.imwrite(os.path.join(save_path, fname), image) # save frame as JPEG file
             img_cnt+=1
-            if img_cnt % 1000 ==0:
+            if img_cnt % 100 ==0:
                 print(img_cnt)
+            if img_cnt >300:
+                break
         count += 1
     print("{} images are extracted in {}.". format(count, save_path))
 
@@ -77,10 +96,11 @@ def extract_video(src_folder, dst_folder):
                 xml_path=vid_name.split(".")[0]+".xml"
                 label=parsing_label(xml_path)
                 dir_name= naming(vid_name.split("\\")[-1],label)
+                stp= extract_stp(xml_path)
                 path= os.path.join(dst_folder,dir_name)
                 print(path)
                 mkdir(path)
-                video2frame(vid_name,path)
+                video2frame(vid_name,path,stp)
 
 
 if __name__ == "__main__":
