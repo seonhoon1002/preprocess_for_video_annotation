@@ -107,10 +107,10 @@ def extract_video(src_folder, dst_folder):
                 dir_name= naming(vid_name.split("\\")[-1],label)
                 stf= extract_stf(xml_path)
                 print(stf)
-                pre_f=-9000
+                prev_f=-9000
                 for f in stf:
                     f=int(f)
-                    if f < pre_f+580:
+                    if f < (prev_f+580):
                         continue
                     print(f)
                     path= os.path.join(dst_folder,dir_name+"+"+str(f))
