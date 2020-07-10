@@ -107,13 +107,17 @@ def extract_video(src_folder, dst_folder):
                 dir_name= naming(vid_name.split("\\")[-1],label)
                 stf= extract_stf(xml_path)
                 print(stf)
+                pre_f=-9000
                 for f in stf:
+                    f=int(f)
+                    if f < pre_f+580:
+                        continue
                     print(f)
-                    path= os.path.join(dst_folder,dir_name+"+"+f)
+                    path= os.path.join(dst_folder,dir_name+"+"+str(f))
                     print(path)
                     mkdir(path)
                     video2frame(vid_name,path,f)
-
+                    prev_f=f 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
