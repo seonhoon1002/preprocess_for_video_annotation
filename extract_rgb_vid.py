@@ -109,9 +109,7 @@ def extract_video(src_folder, dst_folder):
                 stf= extract_stf(xml_path)
                 print(stf)
                 prev_f=-9000
-                stf=[]
                 for f in stf:
-                    print("ok")
                     f=int(f)
                     if f < (prev_f+580):
                         continue
