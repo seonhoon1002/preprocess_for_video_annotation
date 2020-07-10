@@ -52,7 +52,6 @@ def mkdir(path):
             print("Failed to create directory!!!!!")
             raise
 def extract_stf(xml_path):
-    xml_path="D:\\ai-hub\\실신\\outsidedoor_01\\100-6\\100-6_cam01_swoon01_place02_day_spring.xml"
     tree = parse(xml_path)
     root = tree.getroot()
     obj = root.findall('object')
@@ -73,11 +72,11 @@ def video2frame(invideofilename, save_path,frame):
     fps = round(vidcap.get(cv2.CAP_PROP_FPS))
     
     #해당 action이 발생하기전 얼마만큼의 시간을 볼건지에 대한 변수
-    pre_trim_sec= 10
+    pre_trim_sec= 20
     if target_frame < fps * pre_trim_sec:
             target_frame = fps * pre_trim_sec
 
-    vidcap.set(1,target_frame- fps * pre_trim_sec)
+    vidcap.set(1,target_frame- (fps * pre_trim_sec))
 
     fps_trans_rate= round(fps/15)
 
@@ -86,15 +85,15 @@ def video2frame(invideofilename, save_path,frame):
         if not success:
             break
         if count % fps_trans_rate ==0:
-            image=cv2.resize(image,dsize=(1920,1080),interpolation=cv2.INTER_AREA)
+            image=cv2.resize(image,dsize=(960,540),interpolation=cv2.INTER_AREA)
             fname = 'img_{}.jpg'.format("{0:05d}".format(img_cnt))
             cv2.imwrite(os.path.join(save_path, fname), image) # save frame as JPEG file
-            cv2.imshow("a",image)
+            cv2.imshow("a",cv2.resize(image,dsize=(960,540),interpolation=cv2.INTER_AREA))
             cv2.waitKey(10)
             img_cnt+=1
             if img_cnt % 100 ==0:
                 print(img_cnt)
-            if img_cnt >300:
+            if img_cnt >600:
                 break
         count += 1
     print("{} images are extracted in {}.". format(count, save_path))
@@ -107,7 +106,9 @@ def extract_video(src_folder, dst_folder):
                 label=parsing_label(xml_path)
                 dir_name= naming(vid_name.split("\\")[-1],label)
                 stf= extract_stf(xml_path)
+                print(stf)
                 for f in stf:
+                    print(f)
                     path= os.path.join(dst_folder,dir_name+"+"+f)
                     print(path)
                     mkdir(path)
