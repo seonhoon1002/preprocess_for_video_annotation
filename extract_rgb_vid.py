@@ -125,5 +125,4 @@ if __name__ == "__main__":
     parser.add_argument('dst', type=str, help="src folder")
 
     args =parser.parse_args()
-    # extract_video("D:\\ai-hub\\싸움\\","D:\\ai2020_prprc\\rgb_vid\\fight")
     extract_video(args.src, args.dst)
