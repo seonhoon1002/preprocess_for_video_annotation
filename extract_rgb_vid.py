@@ -57,6 +57,7 @@ def extract_stf(xml_path):
     obj = root.findall('object')
     action = [x.findtext("action") for x in obj]
     frame=[]
+    start_frame=[]
     for a in root.iter('action'):
         name= a.findtext("actionname")
         if name == "falldown":
@@ -108,7 +109,9 @@ def extract_video(src_folder, dst_folder):
                 stf= extract_stf(xml_path)
                 print(stf)
                 prev_f=-9000
+                stf=[]
                 for f in stf:
+                    print("ok")
                     f=int(f)
                     if f < (prev_f+580):
                         continue
