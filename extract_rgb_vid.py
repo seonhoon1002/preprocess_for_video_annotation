@@ -100,13 +100,21 @@ def video2frame(invideofilename, save_path,frame):
     print("{} images are extracted in {}.". format(count, save_path))
 
 def extract_video(src_folder, dst_folder):
+    # new_cnt=0
     for outdoor in img_list_loader(src_folder,is_dir=True):
+        # if new_cnt <3:
+        #     print("ok")
+        #     new_cnt+=1
+        #     continue
+        # print(outdoor)
+        # exit(0)
         for fold_num in img_list_loader(outdoor,is_dir=True):            
             for vid_name in img_list_loader(fold_num,extension='mp4'):
                 xml_path=vid_name.split(".")[0]+".xml"
                 label=parsing_label(xml_path)
                 dir_name= naming(vid_name.split("\\")[-1],label)
                 stf= extract_stf(xml_path)
+                print(vid_name)
                 print(stf)
                 prev_f=-9000
                 for f in stf:
