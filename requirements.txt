@@ -1,4 +1,0 @@
-numpy
-sk-video
-scipy
-multiprocess
