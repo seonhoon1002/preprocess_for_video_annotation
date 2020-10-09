@@ -16,7 +16,7 @@ If you want to convert video in AI_HUB, enter the bellow command.
 
 <pre>
 <code>
-python --src [video dir path] --dst [img dir path] --fps [fps] --wh_size [width height] 
+python video2img --src [video dir path] --dst [img dir path] --fps [fps] --wh_size [width height] 
 </code>
 </pre>
 
