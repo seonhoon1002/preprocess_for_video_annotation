@@ -39,7 +39,7 @@ if __name__ == "__main__":
             y1,y2= round(height*y1), round(height*y2)
             
             img= cv2.imread(img)
-            img= cv2.rectangle(img, (x1,y1), (x2,y2), (255,0,0), 2)
+            img= cv2.rectangle(img, (x1,y1), (x2,y2), (0,255,0), 2)
             cv2.imshow("a",img)
             if cv2.waitKey(10) & 0xFF == ord('q'):
                 exit()

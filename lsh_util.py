@@ -1,22 +1,21 @@
 import os
 import cv2
+import natsort as ns
 from xml.etree.ElementTree import parse
 from datetime import timedelta
 
-def img_list_loader(path, extension = 'pickle',is_dir=False):
-    """
-    :param path: 이미지를 불러올 디렉토리 명입니다.
-    :param extension: 선택할 확장자 입니다.
-    :return: 파일 경로가 있는 imgs_list를 불러옵니다.
-    """
-    imgs_list = os.listdir(path)
-    imgs_list = sorted(imgs_list)
-    if is_dir:
-        result = [os.path.join(path, name) for name in imgs_list]
-    else:
-        result = [os.path.join(path, name) for name in imgs_list if name.split(".")[1] == extension]
+def get_filepaths_in_dir(path, extension):
+    
+    file_list = os.listdir(path)
+    file_list = ns.natsorted(file_list)
+    result = [os.path.join(path, name) for name in file_list if name.split(".")[1] == extension]
     return result
 
+def get_dirpaths_in_dir(path):
+    folder_list = os.listdir(path)
+    folder_list = ns.natsorted(folder_list)
+    result = [os.path.join(path, name) for name in folder_list if '.' not in name]
+    return result
 class Preprc_situation_video():
     def __init__(self,path):
         self.data_dir_path= path
