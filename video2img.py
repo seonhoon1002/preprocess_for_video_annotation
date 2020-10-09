@@ -55,7 +55,7 @@ def extract_start_points(xml_path):
 
     return start_points
 
-def video2imgs(invideofilename, save_path,frame,wh_size,fps,pre_trim_sec=20):
+def video2imgs(invideofilename, save_path,frame,wh_size,fps,pre_trim_sec=20,duration=20):
     vidcap = cv2.VideoCapture(invideofilename)
     count = 0
     img_cnt =0
@@ -82,12 +82,12 @@ def video2imgs(invideofilename, save_path,frame,wh_size,fps,pre_trim_sec=20):
             img_cnt+=1
             if img_cnt % 100 ==0:
                 print(img_cnt)
-            if img_cnt >600:
+            if img_cnt >(duration * fps):
                 break
         count += 1
     print("{} images are extracted in {}.". format(count, save_path))
 
-def cvt_video2img_AIHUB(src_folder, dst_folder,fps=5,wh_size=(720,500), exclusion_range=580, pre_trim_sec=15):
+def cvt_video2img_AIHUB(src_folder, dst_folder,fps=5,wh_size=(720,500), exclusion_range=580, pre_trim_sec=15,duration=20):
     """
     exclusion_range: This arg define exclusion area to prevents the overlapping of same event situation. 
     pre_trim_sec: This arg define how long set the time before event happen
@@ -117,7 +117,7 @@ def cvt_video2img_AIHUB(src_folder, dst_folder,fps=5,wh_size=(720,500), exclusio
                     print(f)
                     save_path= os.path.join(dst_folder,dir_name+"_"+str(f))
                     mkdir(save_path)
-                    video2imgs(vid_name,save_path,f,wh_size,fps,pre_trim_sec)
+                    video2imgs(vid_name,save_path,f,wh_size,fps,pre_trim_sec,duration)
                     prev_sp = f 
 
 if __name__ == "__main__":
@@ -126,6 +126,7 @@ if __name__ == "__main__":
     parser.add_argument('--dst', type=str, help="dst folder")
     parser.add_argument('--fps', type=int, help="fps")
     parser.add_argument('--wh_size', type=int,nargs="+" ,help="width height")
+    parser.add_argument('--duration', type=int ,help="duration second")
     
     args =parser.parse_args()
-    cvt_video2img_AIHUB(args.src, args.dst,args.fps,tuple(args.wh_size))
+    cvt_video2img_AIHUB(args.src, args.dst,args.fps,tuple(args.wh_size),args.duration)
