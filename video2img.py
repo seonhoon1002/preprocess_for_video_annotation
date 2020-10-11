@@ -87,7 +87,7 @@ def video2imgs(invideofilename, save_path,frame,wh_size,fps,pre_trim_sec=20,dura
         count += 1
     print("{} images are extracted in {}.". format(count, save_path))
 
-def cvt_video2img_AIHUB(src_folder, dst_folder,fps=5,wh_size=(720,500), exclusion_range=580, pre_trim_sec=15,duration=20):
+def cvt_video2img_AIHUB(src_folder, dst_folder,fps=5,wh_size=(720,500), exclusion_range=580, pre_trim_sec=30,duration=30):
     """
     exclusion_range: This arg define exclusion area to prevents the overlapping of same event situation. 
     pre_trim_sec: This arg define how long set the time before event happen
@@ -97,14 +97,14 @@ def cvt_video2img_AIHUB(src_folder, dst_folder,fps=5,wh_size=(720,500), exclusio
     """
     for outdoor in get_dirpaths_in_dir(path=src_folder):
         for fold_num in get_dirpaths_in_dir(path=outdoor):
-            for vid_name in get_filepaths_in_dir(path=fold_num,extension='mp4'):
+            for vid_name in get_filepaths_in_dir(path=fold_num,extension='mp4')[:1]:
                 
                 xml_path=vid_name.split(".")[0]+".xml"
                 label=parsing_label(xml_path)
 
                 #dir_name for saving converted imgs
                 dir_name= naming(vid_name.split("\\")[-1],label)
-
+                dir_name=dir_name.replace('-','_')
                 #extract start_points because there could be several event points in the one video
                 start_points= extract_start_points(xml_path)
                 
@@ -129,4 +129,4 @@ if __name__ == "__main__":
     parser.add_argument('--duration', type=int ,help="duration second")
     
     args =parser.parse_args()
-    cvt_video2img_AIHUB(args.src, args.dst,args.fps,tuple(args.wh_size),args.duration)
+    cvt_video2img_AIHUB(args.src, args.dst,args.fps,tuple(args.wh_size),duration=args.duration)
