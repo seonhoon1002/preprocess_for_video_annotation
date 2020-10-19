@@ -7,6 +7,7 @@ from lsh_util import get_filepaths_in_dir, get_dirpaths_in_dir
 import datetime
 
 
+
 def m2s(time):
     min=time.split(":")[-2]
     sec=time.split(":")[-1]
@@ -55,18 +56,25 @@ def extract_start_points(xml_path):
 
     for e in root.iter('event'):
         start_points=[e.findtext('starttime')]
-        start_points= start_points.split(":")
-        
-        start_points= [datetime.datetime.strptime(e.findtext("starttime"), '%H:%M:%S.%f')]
-        print(e.findtext("starttime"))
-        print(start_points[0])
-        exit()
+        duration= [e.findtext('duration')]
+        start_time=strtime2fps(e.findtext('starttime'),fps)
+        duration= strtime2fps(e.findtext('duration'),fps)
+        if event_type=='abdonment':
+            start_points=[start_time+ duration]
+        else:
+            start_points=[start_time]
         # if name != None:
         #     start_points= [x.findtext("start") for x in e.findall('frame')]
 
     return start_points
+def strtime2fps(str_time,fps):
+    str_time= str_time.split('.')[0].split(":")
+    sec=int(str_time[-1])
+    mm= int(str_time[-2])
+    str_time=(mm * 60 + sec)*fps
 
-def video2imgs(invideofilename, save_path,frame,wh_size,fps,pre_trim_sec=20,duration=20):
+    return str_time
+def video2imgs(invideofilename, save_path,frame,wh_size,fps,pre_trim_sec=15,duration=20):
     vidcap = cv2.VideoCapture(invideofilename)
     count = 0
     img_cnt =0
@@ -140,6 +148,9 @@ if __name__ == "__main__":
     parser.add_argument('--fps', type=int, help="fps")
     parser.add_argument('--wh_size', type=int,nargs="+" ,help="width height")
     parser.add_argument('--duration', type=int ,help="duration second")
-    
+    parser.add_argument('--event',default='fight', type=str ,help="event type")
+
     args =parser.parse_args()
+    global event_type
+    event_type=args.event
     cvt_video2img_AIHUB(args.src, args.dst,args.fps,tuple(args.wh_size),duration=args.duration)
