@@ -4,6 +4,7 @@ import datetime
 import argparse
 import cv2
 from lsh_util import get_filepaths_in_dir, get_dirpaths_in_dir
+import datetime
 
 
 def m2s(time):
@@ -45,13 +46,23 @@ def extract_start_points(xml_path):
     tree = parse(xml_path)
     root = tree.getroot()
     obj = root.findall('object')
-    action = [x.findtext("action") for x in obj]
     frame=[]
     start_points=[]
-    for a in root.iter('action'):
-        name= a.findtext("actionname")
-        if name == "falldown":
-            start_points= [x.findtext("start") for x in a.findall('frame')]
+    h=root.iter('header')
+    
+    header= [x.findtext("fps") for x in h]
+    fps= int(header[0])
+
+    for e in root.iter('event'):
+        start_points=[e.findtext('starttime')]
+        start_points= start_points.split(":")
+        
+        start_points= [datetime.datetime.strptime(e.findtext("starttime"), '%H:%M:%S.%f')]
+        print(e.findtext("starttime"))
+        print(start_points[0])
+        exit()
+        # if name != None:
+        #     start_points= [x.findtext("start") for x in e.findall('frame')]
 
     return start_points
 
@@ -71,6 +82,7 @@ def video2imgs(invideofilename, save_path,frame,wh_size,fps,pre_trim_sec=20,dura
 
     while True:
         success,image = vidcap.read()
+        # print(image.shape)
         if not success:
             break
         if count % fps_trans_rate ==0:
@@ -87,7 +99,7 @@ def video2imgs(invideofilename, save_path,frame,wh_size,fps,pre_trim_sec=20,dura
         count += 1
     print("{} images are extracted in {}.". format(count, save_path))
 
-def cvt_video2img_AIHUB(src_folder, dst_folder,fps=5,wh_size=(720,500), exclusion_range=580, pre_trim_sec=30,duration=30):
+def cvt_video2img_AIHUB(src_folder, dst_folder,fps=5,wh_size=(720,500), exclusion_range=580, pre_trim_sec=10,duration=30):
     """
     exclusion_range: This arg define exclusion area to prevents the overlapping of same event situation. 
     pre_trim_sec: This arg define how long set the time before event happen
@@ -107,13 +119,14 @@ def cvt_video2img_AIHUB(src_folder, dst_folder,fps=5,wh_size=(720,500), exclusio
                 dir_name=dir_name.replace('-','_')
                 #extract start_points because there could be several event points in the one video
                 start_points= extract_start_points(xml_path)
-                
                 #prev start point 
                 prev_sp=0
                 for f in start_points:
                     f=int(f)
+                    
                     if f < (prev_sp-exclusion_range):
                         continue
+                        
                     print(f)
                     save_path= os.path.join(dst_folder,dir_name+"_"+str(f))
                     mkdir(save_path)
