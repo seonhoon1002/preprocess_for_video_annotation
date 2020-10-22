@@ -74,7 +74,7 @@ def strtime2fps(str_time,fps):
     str_time=(mm * 60 + sec)*fps
 
     return str_time
-def video2imgs(invideofilename, save_path,frame,wh_size,fps,pre_trim_sec=15,duration=20):
+def video2imgs_aihub(invideofilename, save_path,frame,wh_size,fps,pre_trim_sec=15,duration=20):
     vidcap = cv2.VideoCapture(invideofilename)
     count = 0
     img_cnt =0
@@ -86,6 +86,31 @@ def video2imgs(invideofilename, save_path,frame,wh_size,fps,pre_trim_sec=15,dura
 
     vidcap.set(1,target_frame- (fps * pre_trim_sec))
 
+    fps_trans_rate= round(video_fps/fps)
+
+    while True:
+        success,image = vidcap.read()
+        # print(image.shape)
+        if not success:
+            break
+        if count % fps_trans_rate ==0:
+            image=cv2.resize(image,dsize=wh_size,interpolation=cv2.INTER_AREA)
+            fname = 'img_{}.jpg'.format("{0:05d}".format(img_cnt))
+            cv2.imwrite(os.path.join(save_path, fname), image) # save frame as JPEG file
+            cv2.imshow("a",cv2.resize(image,dsize=wh_size,interpolation=cv2.INTER_AREA))
+            cv2.waitKey(10)
+            img_cnt+=1
+            if img_cnt % 100 ==0:
+                print(img_cnt)
+            if img_cnt >(duration * fps):
+                break
+        count += 1
+    print("{} images are extracted in {}.". format(count, save_path))
+def video2imgs(invideofilename, save_path,wh_size,fps,duration=20):
+    vidcap = cv2.VideoCapture(invideofilename)
+    count = 0
+    img_cnt =0
+    video_fps = round(vidcap.get(cv2.CAP_PROP_FPS))
     fps_trans_rate= round(video_fps/fps)
 
     while True:
@@ -138,8 +163,16 @@ def cvt_video2img_AIHUB(src_folder, dst_folder,fps=5,wh_size=(720,500), exclusio
                     print(f)
                     save_path= os.path.join(dst_folder,dir_name+"_"+str(f))
                     mkdir(save_path)
-                    video2imgs(vid_name,save_path,f,wh_size,fps,pre_trim_sec,duration)
+                    video2imgs_aihub(vid_name,save_path,f,wh_size,fps,pre_trim_sec,duration)
                     prev_sp = f 
+
+def cvt_video2img_fire(src_folder, dst_folder,fps=5,wh_size=(720,500),duration=300):
+    for i,vid_name in enumerate(get_filepaths_in_dir(path=src_folder,extension='avi')):
+        dir_name = str(i)
+        save_path= os.path.join(dst_folder,dir_name)
+        mkdir(save_path)
+        video2imgs(vid_name,save_path,wh_size,fps,duration)
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -153,4 +186,5 @@ if __name__ == "__main__":
     args =parser.parse_args()
     global event_type
     event_type=args.event
-    cvt_video2img_AIHUB(args.src, args.dst,args.fps,tuple(args.wh_size),duration=args.duration)
+    # cvt_video2img_AIHUB(args.src, args.dst,args.fps,tuple(args.wh_size),duration=args.duration)
+    cvt_video2img_fire(args.src, args.dst,args.fps,tuple(args.wh_size),duration=args.duration)
