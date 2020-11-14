@@ -32,7 +32,8 @@ python video2img.py --src D:\data\first_dataset_2020_10\raw_video\fire --dst D:\
 </pre>
 
 ## File structure
-It is necessary to set video folder like bellow image
+It is necessary to set video folder like bellow image  
+It doesn't have to set xml file(If you have no xml, my model automatically ignore xml file)
 <pre>
 <code>
 src_video_folder
