@@ -33,6 +33,8 @@ It is necessary to set video folder like bellow image
 <pre>
 <code>
 src_video_folder
+ |
+ |
  |_________1.mp4
  |_________2.mp4
  ....
@@ -45,6 +47,8 @@ Just know my model how form the structure.
 <pre>
 <code>
 dst_video_folder
+ |
+ |
  |_________1 img foldoer
  |              |_________img_00000.jpg    
  |              |_________img_00001.jpg
