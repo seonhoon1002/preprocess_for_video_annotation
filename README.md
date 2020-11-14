@@ -32,8 +32,28 @@ python video2img.py --src D:\ai-hub\abdonment --dst D:\ai-hub_prprc\abdonment --
 ## File structure
 <pre>
 <code>
-src
- |__
+src_video_folder
+ |_________1.mp4
+ |_________2.mp4
+ ....
+ |_________100.mp4
+</code>
+</pre>
 
+My model automatically sets the structure like bellow image. Just know my model how form the structure.
+<pre>
+<code>
+dst_video_
+ |_________1 img foldoer
+ |              |_________img_00000.jpg    
+ |              |_________img_00001.jpg
+ |              |_________img_00002.jpg
+ |              ...
+ |_________2 img foldoer
+ |              |_________img_00000.jpg    
+ |              |_________img_00001.jpg
+ |              |_________img_00002.jpg
+ |              ...
+ |_________100 img foldoer
 </code>
 </pre>
