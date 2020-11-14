@@ -132,7 +132,8 @@ def video2imgs(invideofilename, save_path,wh_size,fps,duration=20):
         count += 1
     print("{} images are extracted in {}.". format(count, save_path))
 
-def cvt_video2img_AIHUB(src_folder, dst_folder,fps=5,wh_size=(720,500), exclusion_range=580, pre_trim_sec=10,duration=30):
+def cvt_video2img(src_folder, dst_folder,fps=5,wh_size=(720,500),
+                         exclusion_range=580, pre_trim_sec=10,duration=30,extension='mp4'):
     """
     exclusion_range: This arg define exclusion area to prevents the overlapping of same event situation. 
     pre_trim_sec: This arg define how long set the time before event happen
@@ -142,45 +143,39 @@ def cvt_video2img_AIHUB(src_folder, dst_folder,fps=5,wh_size=(720,500), exclusio
     """
     for outdoor in get_dirpaths_in_dir(path=src_folder):
         for fold_num in get_dirpaths_in_dir(path=outdoor):
-            for vid_name in get_filepaths_in_dir(path=fold_num,extension='mp4')[:1]:
-                
+            for vid_name in get_filepaths_in_dir(path=fold_num,extension=extension)[:1]:
                 xml_path=vid_name.split(".")[0]+".xml"
-                label=parsing_label(xml_path)
+                start_points=[0]
+               
+                dir_name= vid_name.split("\\")[-1]
+                print("dir_name",dir_name)
+                exit()
+                if os.path.isfile(xml_path):
+                    label=parsing_label(xml_path)
+                    #dir_name for saving converted imgs
+                    dir_name= naming(vid_name.split("\\")[-1],label)
+                    dir_name=dir_name.replace('-','_')
+                    #extract start_points because there could be several event points in the one video
+                    start_points= extract_start_points(xml_path)
 
-                #dir_name for saving converted imgs
-                dir_name= naming(vid_name.split("\\")[-1],label)
-                dir_name=dir_name.replace('-','_')
-                #extract start_points because there could be several event points in the one video
-                start_points= extract_start_points(xml_path)
                 #prev start point 
                 prev_sp=0
                 for f in start_points:
                     f=int(f)
-                    
                     if f < (prev_sp-exclusion_range):
                         continue
-                        
                     print(f)
                     save_path= os.path.join(dst_folder,dir_name+"_"+str(f))
                     mkdir(save_path)
                     video2imgs_aihub(vid_name,save_path,f,wh_size,fps,pre_trim_sec,duration)
                     prev_sp = f 
 
-def cvt_video2img_fire(src_folder, dst_folder,fps=5,wh_size=(720,500),duration=300):
-    for i,vid_name in enumerate(get_filepaths_in_dir(path=src_folder,extension='avi')):
-        if i <5:
-            continue
-        dir_name = str(i+22)
-        save_path= os.path.join(dst_folder,dir_name)
-        mkdir(save_path)
-        video2imgs(vid_name,save_path,wh_size,fps,duration)
-
-
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--src', type=str, help="src folder")
     parser.add_argument('--dst', type=str, help="dst folder")
     parser.add_argument('--fps', type=int, help="fps")
+    parser.add_argument('--extension', type=str, default='mp4',help="extens")
     parser.add_argument('--wh_size', type=int,nargs="+" ,help="width height")
     parser.add_argument('--duration', type=int ,help="duration second")
     parser.add_argument('--event',default='fight', type=str ,help="event type")
@@ -188,5 +183,6 @@ if __name__ == "__main__":
     args =parser.parse_args()
     global event_type
     event_type=args.event
-    cvt_video2img_AIHUB(args.src, args.dst,args.fps,tuple(args.wh_size),duration=args.duration)
+    cvt_video2img(args.src, args.dst,args.fps,tuple(args.wh_size)
+                        ,duration=args.duration,extension=args.extension)
     #cvt_video2img_fire(args.src, args.dst,args.fps,tuple(args.wh_size),duration=args.duration)

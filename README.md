@@ -2,8 +2,11 @@
 This repository is made for video annotation preprocess that is uploaded in AI_HUB in Korea.
 My code transform video to images, which can modify fps, extracting event duration and size
 
-## code install
+## supporting os
+This project can only run in window  
+Someday, I will make model that can be run in Ubuntu
 
+## code install
 <pre>
 <code>
 pip install -r requirements.txt
