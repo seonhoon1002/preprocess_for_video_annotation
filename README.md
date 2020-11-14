@@ -33,7 +33,6 @@ python video2img.py --src D:\ai-hub\abdonment --dst D:\ai-hub_prprc\abdonment --
 <pre>
 <code>
 src
-
  |__
 
 </code>
