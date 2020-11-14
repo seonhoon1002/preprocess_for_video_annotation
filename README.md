@@ -42,9 +42,7 @@ src_video_folder
 </code>
 </pre>
 
-My model automatically sets the structure like bellow image.
-
-Just know my model how form the structure.
+My model automatically sets the structure like bellow image.  Just know my model how form the structure.
 <pre>
 <code>
 dst_video_folder
