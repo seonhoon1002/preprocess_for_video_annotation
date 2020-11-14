@@ -20,8 +20,7 @@ python video2img --src [video dir path] --dst [img dir path] --fps [fps] --wh_si
 </code>
 </pre>
 
-
-This is example
+Like this
 
 <pre>
 <code>
@@ -30,6 +29,7 @@ python video2img.py --src D:\ai-hub\abdonment --dst D:\ai-hub_prprc\abdonment --
 </pre>
 
 ## File structure
+It is necessary to set video folder like bellow image
 <pre>
 <code>
 src_video_folder
@@ -40,7 +40,8 @@ src_video_folder
 </code>
 </pre>
 
-My model automatically sets the structure like bellow image. Just know my model how form the structure.
+My model automatically sets the structure like bellow image.
+Just know my model how form the structure.
 <pre>
 <code>
 dst_video_
