@@ -143,13 +143,11 @@ def cvt_video2img(src_folder, dst_folder,fps=5,wh_size=(720,500),
     """
     for outdoor in get_dirpaths_in_dir(path=src_folder):
         for fold_num in get_dirpaths_in_dir(path=outdoor):
-            for vid_name in get_filepaths_in_dir(path=fold_num,extension=extension)[:1]:
+            for vid_name in get_filepaths_in_dir(path=fold_num,extension=extension):
                 xml_path=vid_name.split(".")[0]+".xml"
                 start_points=[0]
-               
-                dir_name= vid_name.split("\\")[-1]
-                print("dir_name",dir_name)
-                exit()
+                dir_name= vid_name.split("\\")[-1].split(".")[0]
+                print(dir_name)
                 if os.path.isfile(xml_path):
                     label=parsing_label(xml_path)
                     #dir_name for saving converted imgs

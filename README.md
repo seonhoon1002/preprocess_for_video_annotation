@@ -19,7 +19,7 @@ If you want to convert video in AI_HUB, enter the bellow command.
 
 <pre>
 <code>
-python video2img --src [video dir path] --dst [img dir path] --fps [fps] --wh_size [width height] --duration [duration sec]
+python video2img --src [video dir path] --dst [img dir path] --fps [fps] --wh_size [width height] --duration [duration sec] --extenstion [video extension]
 </code>
 </pre>
 
@@ -27,7 +27,7 @@ Like this
 
 <pre>
 <code>
-python video2img.py --src D:\ai-hub\abdonment --dst D:\ai-hub_prprc\abdonment --fps 10 --wh_size 1280 720 --duration 30
+python video2img.py --src D:\data\first_dataset_2020_10\raw_video\fire --dst D:\data\first_dataset_2020_10\refine_video\fire --fps 10 --wh_size 1280 720 --duration 30 --extension 'mp4'
 </code>
 </pre>
 
