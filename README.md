@@ -25,6 +25,6 @@ This is example
 
 <pre>
 <code>
-python video2img.py --src D:\ai-hub\≈ı±‚ --dst D:\ai-hub_prprc\abdonment --fps 10 --wh_size 1280 720 --duration 30 --event "abdonment"
+python video2img.py --src D:\ai-hub\abdonment --dst D:\ai-hub_prprc\abdonment --fps 10 --wh_size 1280 720 --duration 30
 </code>
 </pre>
