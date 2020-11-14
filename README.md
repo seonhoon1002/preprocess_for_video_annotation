@@ -34,11 +34,22 @@ It is necessary to set video folder like bellow image
 <code>
 src_video_folder
  |
- |
- |_________1.mp4
- |_________2.mp4
+ |_________outsidedoor01
+ |              |_________1-5
+ |              |          |____1.mp4    
+ |              |          |____1.xml
+ |              |          |____2.mp4
+ |              |          |____2.xml
+ |              |
+ |              |_________1-6
+ |              |          |____1.mp4    
+ |              |          |____1.xml
+ |              |          |____2.mp4
+ |              |          |____2.xml
+ |              |_________1-7
+ |              
  ....
- |_________100.mp4
+ |_________outsidedoor02
 </code>
 </pre>
 

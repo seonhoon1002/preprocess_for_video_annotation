@@ -188,5 +188,5 @@ if __name__ == "__main__":
     args =parser.parse_args()
     global event_type
     event_type=args.event
-    # cvt_video2img_AIHUB(args.src, args.dst,args.fps,tuple(args.wh_size),duration=args.duration)
-    cvt_video2img_fire(args.src, args.dst,args.fps,tuple(args.wh_size),duration=args.duration)
+    cvt_video2img_AIHUB(args.src, args.dst,args.fps,tuple(args.wh_size),duration=args.duration)
+    #cvt_video2img_fire(args.src, args.dst,args.fps,tuple(args.wh_size),duration=args.duration)
