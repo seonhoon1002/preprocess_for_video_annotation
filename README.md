@@ -44,7 +44,7 @@ My model automatically sets the structure like bellow image.
 Just know my model how form the structure.
 <pre>
 <code>
-dst_video_
+dst_video_folder
  |_________1 img foldoer
  |              |_________img_00000.jpg    
  |              |_________img_00001.jpg
