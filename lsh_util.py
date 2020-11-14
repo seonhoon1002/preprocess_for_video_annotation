@@ -7,7 +7,7 @@ from datetime import timedelta
 def get_filepaths_in_dir(path, extension):
     file_list = os.listdir(path)
     file_list = ns.natsorted(file_list)
-    result = [os.path.join(path, name) for name in file_list if name.split(".")[1] == extension]
+    result = [os.path.join(path, name) for name in file_list if name.split(".")[-1] == extension]
     return result
 
 def get_dirpaths_in_dir(path):

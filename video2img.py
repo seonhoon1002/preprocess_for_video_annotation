@@ -168,7 +168,9 @@ def cvt_video2img_AIHUB(src_folder, dst_folder,fps=5,wh_size=(720,500), exclusio
 
 def cvt_video2img_fire(src_folder, dst_folder,fps=5,wh_size=(720,500),duration=300):
     for i,vid_name in enumerate(get_filepaths_in_dir(path=src_folder,extension='avi')):
-        dir_name = str(i)
+        if i <5:
+            continue
+        dir_name = str(i+22)
         save_path= os.path.join(dst_folder,dir_name)
         mkdir(save_path)
         video2imgs(vid_name,save_path,wh_size,fps,duration)

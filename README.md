@@ -20,3 +20,10 @@ python video2img --src [video dir path] --dst [img dir path] --fps [fps] --wh_si
 </code>
 </pre>
 
+this is example
+
+<pre>
+<code>
+python video2img.py --src D:\tnm_tech\data\first_dataset_2020_10\raw_video\fire --dst D:\tnm_tech\data\first_dataset_2020_10\refine_video\fire --fps 10 --wh_size 1280 720 --duration 30
+</code>
+</pre>
