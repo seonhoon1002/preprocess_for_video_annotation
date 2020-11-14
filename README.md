@@ -28,3 +28,13 @@ This is example
 python video2img.py --src D:\ai-hub\abdonment --dst D:\ai-hub_prprc\abdonment --fps 10 --wh_size 1280 720 --duration 30
 </code>
 </pre>
+
+## File structure
+<pre>
+<code>
+src
+
+ |__
+
+</code>
+</pre>
